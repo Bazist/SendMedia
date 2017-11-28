@@ -1,0 +1,11 @@
+c:\Projects\SendMedia\SendMedia\bin\Debug\SendMedia.exe.config
+c:\Projects\SendMedia\SendMedia\obj\Debug\SendMedia.csprojResolveAssemblyReference.cache
+c:\Projects\SendMedia\SendMedia\obj\Debug\SendMedia.Properties.Resources.resources
+c:\Projects\SendMedia\SendMedia\obj\Debug\SendMedia.csproj.GenerateResource.Cache
+c:\Projects\SendMedia\SendMedia\bin\Debug\SendMedia.exe
+c:\Projects\SendMedia\SendMedia\bin\Debug\SendMedia.pdb
+c:\Projects\SendMedia\SendMedia\obj\Debug\SendMedia.MainForm.resources
+c:\Projects\SendMedia\SendMedia\obj\Debug\SendMedia.exe
+c:\Projects\SendMedia\SendMedia\obj\Debug\SendMedia.pdb
+c:\Projects\SendMedia\SendMedia\bin\Debug\Newtonsoft.Json.dll
+c:\Projects\SendMedia\SendMedia\bin\Debug\Newtonsoft.Json.xml
