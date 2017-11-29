@@ -20,7 +20,7 @@ namespace SendMedia
         {
             InitializeComponent();
 
-            _kw = new KeyboardWatcher(new List<string> { "Skype" },
+            _kw = new KeyboardWatcher(new List<string> { "Notepad" },
                                       new List<string> { this.Text });
 
             //_kw.ActivatedWindow += _kw_Activated;
@@ -70,48 +70,7 @@ namespace SendMedia
             HideWindow();
         }
 
-        private void PasteText(string text)
-        {
-            var oldText = Clipboard.GetText();
-
-            CopyToClipboard(text);
-
-            SendKeys.Send("^V");
-
-            CopyToClipboard(oldText);
-        }
-
-        private void ClearText(int amountSymbols)
-        {
-            var delStr = new StringBuilder();
-
-            for (int i = 0; i < amountSymbols; i++)
-            {
-                delStr.Append("{BS}");
-            }
-
-            SendKeys.Send(delStr.ToString());
-        }
-
-        private void CopyToClipboard(string text)
-        {
-            var clipboardThread = new Thread(() => ClipBoardThreadWorker(text));
-            clipboardThread.SetApartmentState(ApartmentState.STA);
-            clipboardThread.IsBackground = false;
-            clipboardThread.Start();
-
-            Thread.Sleep(100);
-
-            while (clipboardThread.ThreadState != ThreadState.Stopped)
-                Thread.Sleep(10);
-        }
-
-        private void ClipBoardThreadWorker(string inTextToCopy)
-        {
-            Clipboard.Clear();
-
-            Clipboard.SetText(inTextToCopy);
-        }
+        
 
         private void AddToGrid(string fileName, string url)
         {
@@ -129,9 +88,9 @@ namespace SendMedia
 
                     HideWindow();
 
-                    ClearText(_keyword.Length + _word.Length + 1);
+                    ClipboardHelper.ClearText(_keyword.Length + _word.Length + 1);
 
-                    PasteText(pic.Name);
+                    ClipboardHelper.PasteText(pic.Name);
 
                     SendKeys.Send("{Enter}");
 

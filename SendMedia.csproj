@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActiveWindowHook.cs" />
+    <Compile Include="ClipboardHelper.cs" />
     <Compile Include="SendMediaApplicationContext.cs" />
     <Compile Include="Gif.cs" />
     <Compile Include="GiphySearch.cs" />

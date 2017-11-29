@@ -25,6 +25,8 @@ namespace SendMedia
                 Visible = true
             };
 
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             var frm = new MainForm();
             frm.Show();
 
@@ -33,6 +35,13 @@ namespace SendMedia
                            MessageBoxButtons.OK,
                            MessageBoxIcon.Information);
 
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            var ex = (Exception)e.ExceptionObject;
+
+            MessageBox.Show(ex.Message + ex.StackTrace, "Error", MessageBoxButtons.OK);
         }
 
         void Exit(object sender, EventArgs e)
