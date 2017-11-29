@@ -11,13 +11,15 @@ namespace SendMedia
 {
     public class GiphySearch
     {
+        private const string API_URL = "https://api.giphy.com/v1/gifs/search?q={0}&api_key=dc6zaTOxFJmzC";
+
         public delegate void DownloadFileCompletedHandler(string fileName, string url);
 
         public event DownloadFileCompletedHandler DownloadFileCompleted;
 
         public void Search(string searchQuery)
         {
-            var rawResponse = new WebClient().DownloadString("https://api.giphy.com/v1/gifs/search?q=" + searchQuery + "&api_key=dc6zaTOxFJmzC");
+            var rawResponse = new WebClient().DownloadString(string.Format(API_URL, searchQuery));
             JObject response = JObject.Parse(rawResponse);
             JArray photos = (JArray)response["data"];
 
@@ -30,14 +32,14 @@ namespace SendMedia
         private void DownloadGiphy(string url)
         {
             WebClient client = new WebClient();
-            client.DownloadFileCompleted += Client_DownloadFileCompleted;
+            client.DownloadFileCompleted += OnDownloadFileCompleted;
 
             // Starts the download
             var gif = new Gif { Filename = System.IO.Path.GetTempFileName(), Url = url };
             client.DownloadFileAsync(new Uri(gif.Url), gif.Filename, gif);
         }
 
-        private void Client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        private void OnDownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             Gif gif = (Gif)e.UserState;
 

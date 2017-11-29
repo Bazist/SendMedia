@@ -30,23 +30,6 @@ namespace SendMedia
 
         private bool _isActivatedWindow = false;
 
-        enum KeywordEnum
-        {
-            None,
-            Started,
-            Ended
-        }
-
-        private KeywordEnum _keywordState = KeywordEnum.None;
-
-        public KeyboardWatcher(List<string> windowTitles, List<string> ignoreWindowTitles)
-        {
-            _windowTitles = windowTitles;
-            _ignoreWindowTitles = ignoreWindowTitles;
-
-            _awk.Activated += Awk_ActiveWindow;
-        }
-
         const string _keyword = "/GIF ";
         private string _sentence = string.Empty;
 
@@ -81,8 +64,25 @@ namespace SendMedia
         private object _locker = new object();
 
         private const int _delayInSeconds = 2;
+        
+        enum KeywordEnum
+        {
+            None,
+            Started,
+            Ended
+        }
 
-        private void Kh_KeyDown(Keys key, bool shift, bool ctrl, bool alt)
+        private KeywordEnum _keywordState = KeywordEnum.None;
+
+        public KeyboardWatcher(List<string> windowTitles, List<string> ignoreWindowTitles)
+        {
+            _windowTitles = windowTitles;
+            _ignoreWindowTitles = ignoreWindowTitles;
+
+            _awk.Activated += OnActiveWindow;
+        }
+
+        private void OnKeyDown(Keys key, bool shift, bool ctrl, bool alt)
         {
             //Console.WriteLine("The Key: " + key);
 
@@ -97,7 +97,7 @@ namespace SendMedia
             {
                 _sentence += keyStr.ToString();
 
-                if (_sentence.Length > 1024)
+                if (_sentence.Length > 256)
                 {
                     _sentence = _sentence.Substring(1);
                 }
@@ -123,6 +123,7 @@ namespace SendMedia
             {
                 if (!string.IsNullOrEmpty(_sentence))
                 {
+                    //Ended state can be reached in 2 seconds if new events wouldn't be raised
                     ThreadPool.QueueUserWorkItem(
                         x =>
                         {
@@ -151,7 +152,10 @@ namespace SendMedia
             {
                 _keywordState = KeywordEnum.None;
 
-                DeactivatedKeyword(_keyword, null);
+                if (DeactivatedKeyword != null)
+                {
+                    DeactivatedKeyword(_keyword, null);
+                }
 
                 _sentence = string.Empty;
             }
@@ -165,11 +169,16 @@ namespace SendMedia
             {
                 if (value)
                 {
+                    if (ActivatedWindow != null)
+                    {
+                        ActivatedWindow();
+                    }
+
                     if (!_isActivatedWindow)
                     {
                         _isActivatedWindow = true;
 
-                        _kh.KeyDown += Kh_KeyDown;
+                        _kh.KeyDown += OnKeyDown;
                     }
                 }
                 else
@@ -178,7 +187,12 @@ namespace SendMedia
                     {
                         _isActivatedWindow = false;
 
-                        _kh.KeyDown -= Kh_KeyDown;
+                        _kh.KeyDown -= OnKeyDown;
+                    }
+
+                    if (DeactivatedWindow != null)
+                    {
+                        DeactivatedWindow();
                     }
                 }
             }
@@ -188,27 +202,19 @@ namespace SendMedia
             }
         }
 
-        private void Awk_ActiveWindow(string title)
+        private void OnActiveWindow(string title)
         {
+            Debug.WriteLine("OnActiveWindow");
+
             if (!_ignoreWindowTitles.Any(x => title.Contains(x)))
             {
                 if (_windowTitles.Any(x => title.Contains(x)))
                 {
-                    if (ActivatedWindow != null)
-                    {
-                        ActivatedWindow();
-                    }
-
-                   IsActivatedWindow = true;
+                    IsActivatedWindow = true;
                 }
                 else if (_isActivatedWindow)
                 {
                     IsActivatedWindow = false;
-
-                    if (DeactivatedWindow != null)
-                    {
-                        DeactivatedWindow();
-                    }
                 }
             }
         }

@@ -20,20 +20,25 @@ namespace SendMedia
         {
             InitializeComponent();
 
+            MessageBox.Show("The application is running. Open Skype window and type /gif YOURKEYWORD. In short time the window with searched gifs will be opened.",
+                            "Information",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+
             _kw = new KeyboardWatcher(new List<string> { "Skype" },
                                       new List<string> { this.Text });
 
             //_kw.ActivatedWindow += _kw_Activated;
             //_kw.DeactivatedWindow += _kw_Deactivated;
 
-            _kw.ActivatedKeyword += _kw_ActivatedKeyword;
+            _kw.ActivatedKeyword += OnActivatedKeyword;
             _gs.DownloadFileCompleted += AddToGrid;
         }
 
         private string _keyword;
         private string _word;
 
-        private void _kw_ActivatedKeyword(string keyword, string word)
+        private void OnActivatedKeyword(string keyword, string word)
         {
             this.Invoke(new Action(() =>
             {
@@ -126,10 +131,10 @@ namespace SendMedia
             picBox.MouseClick += new MouseEventHandler(
                 (object picSender, MouseEventArgs evntArgs) => {
                     PictureBox pic = (PictureBox)picSender;
-                    
-                    this.Visible = false;
 
-                    ClearText(_keyword.Length + _word.Length);
+                    HideWindow();
+
+                    ClearText(_keyword.Length + _word.Length + 1);
 
                     PasteText(pic.Name);
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SendMedia
 {
-    class Gif
+    public class Gif
     {
         public string Filename { get; set; }
         public string Url { get; set; }
