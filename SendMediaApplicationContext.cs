@@ -19,13 +19,20 @@ namespace SendMedia
             {
                 Icon = Resources.TrayIcon,
                 ContextMenu = new ContextMenu(new MenuItem[] {
-                new MenuItem("Exit", Exit)
-            }),
+                                                new MenuItem("Exit", Exit)
+                                             }),
+                Text = "Giphy In Skype",
                 Visible = true
             };
 
             var frm = new MainForm();
             frm.Show();
+
+            MessageBox.Show("The application is running. Open Skype window and type /gif YOURKEYWORD. In short time the window with searched gifs will be opened.",
+                           "Information",
+                           MessageBoxButtons.OK,
+                           MessageBoxIcon.Information);
+
         }
 
         void Exit(object sender, EventArgs e)

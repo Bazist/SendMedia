@@ -20,11 +20,6 @@ namespace SendMedia
         {
             InitializeComponent();
 
-            MessageBox.Show("The application is running. Open Skype window and type /gif YOURKEYWORD. In short time the window with searched gifs will be opened.",
-                            "Information",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
-
             _kw = new KeyboardWatcher(new List<string> { "Skype" },
                                       new List<string> { this.Text });
 
